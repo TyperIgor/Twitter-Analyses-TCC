@@ -4,10 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tweetinvi;
-using Tweetinvi.Core.Extensions;
-using Tweetinvi.Models;
 using Tweetinvi.Models.V2;
-using Tweetinvi.Parameters;
 using Tweetinvi.Parameters.V2;
 using TwitterAnalysis.App.Service.Model;
 using TwitterAnalysis.App.Service.Model.Settings;
@@ -17,7 +14,7 @@ namespace TwitterAnalysis.Infrastructure.Service.Gateway
 {
     public class TwitterServiceGateway : ITwitterServiceGateway
     {
-        private readonly TwitterSettings _twitterSettings;
+        private TwitterSettings _twitterSettings;
         private readonly ILogger<TwitterServiceGateway> _logger;
 
         public TwitterServiceGateway(IOptions<TwitterSettings> options, ILogger<TwitterServiceGateway> logger)
@@ -51,8 +48,6 @@ namespace TwitterAnalysis.Infrastructure.Service.Gateway
             return new SearchTweetsV2Parameters(query)
             {
                 PageSize = pageSize,
-                StartTime = DateTime.UtcNow.AddDays(-1),
-                EndTime = DateTime.UtcNow
             };
         }
 
@@ -77,7 +72,7 @@ namespace TwitterAnalysis.Infrastructure.Service.Gateway
 
         private TwitterClient Authenticate()
         {
-            return new TwitterClient(new ConsumerOnlyCredentials { BearerToken = _twitterSettings.BearerToken });
+            return new TwitterClient(_twitterSettings.ConsumerKey, _twitterSettings.ConsumerSecret, _twitterSettings.AccessToken, _twitterSettings.AccessTokenSecret);
         }
         #endregion
     }

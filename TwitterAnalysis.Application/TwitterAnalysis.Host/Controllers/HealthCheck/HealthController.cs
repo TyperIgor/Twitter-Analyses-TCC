@@ -17,11 +17,7 @@ namespace TwitterAnalysis.Host.Controllers.HealthCheck
         }
 
         [HttpGet()]
-        public async Task<IActionResult> Get()
-        {
-            var report = await _healthCheck.CheckHealthAsync();
-
-            return report.Status == HealthStatus.Healthy ? Ok(report) : StatusCode((int)HttpStatusCode.ServiceUnavailable, report);
-        }
+        public async Task<IActionResult> Get() => Ok(await _healthCheck.CheckHealthAsync());
+        
     }
 }

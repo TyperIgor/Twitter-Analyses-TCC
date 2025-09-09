@@ -1,5 +1,4 @@
-﻿using System;
-using TwitterAnalysis.App.Services.Interfaces;
+﻿using TwitterAnalysis.App.Services.Interfaces;
 using TwitterAnalysis.Infrastructure.Data.Interfaces;
 using System.Threading.Tasks;
 

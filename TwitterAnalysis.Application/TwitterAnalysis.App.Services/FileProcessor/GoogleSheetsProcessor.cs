@@ -19,7 +19,7 @@ namespace TwitterAnalysis.App.Services.FileProcessor
         static SheetsService SheetsService { get; set; }
         static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
 
-        public GoogleSheetsProcessor(IOptions<GoogleCredentialsSettings> options)
+        private GoogleSheetsProcessor(IOptions<GoogleCredentialsSettings> options)
         {
             _googleCredentialsSettings = options.Value;
         }
@@ -41,6 +41,7 @@ namespace TwitterAnalysis.App.Services.FileProcessor
             List<RacistModelData> racistPhrases = new();
 
             var request = sheets.Spreadsheets.Values.Get(SpreadsheetsId, range);
+
             var responseFromSheets = await request.ExecuteAsync();
 
             racistPhrases.AddRange(from dataOnSheets in responseFromSheets.Values
@@ -49,6 +50,7 @@ namespace TwitterAnalysis.App.Services.FileProcessor
                                        ActiveRacist = Convert.ToBoolean(dataOnSheets[1]),
                                        Text = Convert.ToString(dataOnSheets[0])
                                    });
+
             return racistPhrases;
         }
 
@@ -58,7 +60,7 @@ namespace TwitterAnalysis.App.Services.FileProcessor
 
             var googleCredential = GoogleCredential.FromJson(jsonCredencials).CreateScoped(Scopes);
 
-            SheetsService = new SheetsService(new BaseClientService.Initializer()
+            var SheetsService = new SheetsService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = googleCredential
             });
